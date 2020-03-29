@@ -73,19 +73,21 @@ df$activity <- factor(df$activity, labels = activities)
 # STEP 4: rename variables
 # create a function that applies all the transformations
 clean_vars <- function(var) {
-  # transformation 1: Mag -> Total
-  var <- gsub("Mag", "Modulo", var)
-  # transformation 2: initial t -> empty
+  # transformation: initial t -> empty
   var <- gsub("^t", "", var)
-  # transformation 3: remove empty parentheses
-  var <- gsub("\\(\\)", "", var)
   # transformation: - -> _
   var <- gsub("-", "_", var)
+  # transformation: Mag -> _modulo at the end
+  var <- gsub("(^.*)Mag(.*$)", "\\1\\2_modulo$", var, perl = T)
+  # transformation: Jerk -> jerk_ at the beginning
+  var <- gsub("(^.*)Jerk(.*$)", "jerk_\\1\\2", var, perl = T)
+  # transformation: remove empty parentheses
+  var <- gsub("\\(\\)", "", var)
   # transformation: Gyro -> AngVelocity
   var <- gsub("Gyro", "AngVelocity", var)
   # transformation: initial f -> FFT_
   # FFT stands for Fast Fourier Transform
-  var <- gsub("^f", "FFT_", var)
+  var <- gsub("^f", "fft_", var)
   # BodyBody is simplified to Body
   var <- gsub("BodyBody", "Body", var)
   return(var)
@@ -104,6 +106,6 @@ summary_df <- tidy_df %>%
   group_by(subject, activity) %>%
   summarise_all(funs(mean(., na.rm=TRUE)))
 
-
+write.table(summary_df, file="summary_data.txt", row.names = FALSE)
 # summary_df <- summary_df %>%
 #   select(subject|activity|contains("mean") & contains("Modulo"))
