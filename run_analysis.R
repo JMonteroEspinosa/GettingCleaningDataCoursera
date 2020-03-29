@@ -1,6 +1,6 @@
 library(tibble)
 
-setwd("/home/jmontero/Documents/coursera/dataCleaningR/Week4/Assignment_folder/GettingCleaningDataCoursera")
+setwd("add your directory")
 
 # import everything
 max_rows <- 10000

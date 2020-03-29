@@ -11,9 +11,9 @@ Variables can be separated into variables describing the experiment and features
 Feature names follow a given structure. They contain several tags joined by underscores, where each tag has a particular meaning.
 
 #### Measures
-- BodyAcc: acceleration experimented by the body
-- GravityAcc: acceleration caused by gravity
-- BodyAngVelocity: angular velocity experimented by the body
+- BodyAcc: acceleration experimented by the body (in g units)
+- GravityAcc: acceleration caused by gravity (in g units)
+- BodyAngVelocity: angular velocity experimented by the body (in radians/second)
 
 #### Moments
 mean and std. They represent mean and standard deviation, respectively.
