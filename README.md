@@ -54,7 +54,7 @@ A total of eight transformations are applied to the dataset with this purpose:
 - Mag, which stands for magnitude, is replaced by modulo\_ at the beginning.
 - empty parentheses, indicating functions (e.g. mean()), are eliminated.
 - original names with Gyro (from measures taken from a gyroscope) are replaced by the actual measure being taken, AngVelocity (Angular Velocity)
-- initial 'f', indicating whether a variables has been transformed with a Fast Fourier Transformation, is replaced by the acronym fft at the beginning of the string.
+- initial 'f', indicating whether a variables has been transformed with a Fast Fourier Transform, is replaced by the acronym fft at the beginning of the string.
 
 Finishing this step, cleaning is over. The dataset is saved as tidy_data.RDS (which stores the dataframe as a R object)
 
