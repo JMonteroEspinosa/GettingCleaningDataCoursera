@@ -1,22 +1,32 @@
 library(tibble)
 library(dplyr)
-setwd("add your directory")
+setwd("your directory")
 
-# import everything
+# add feature names to dataset
+feature_names <- read.table("UCI HAR Dataset/features.txt",
+                            stringsAsFactors = F)
+feature_names <- feature_names$V2  # getting rid of index
+
+# max_rows was used to limit the size of the dataframe
+# while writing the code
+# currently, max_rows > total rows in filess
 max_rows <- 10000
 
 # train sets
-X_train <- read.table(file = "UCI HAR Dataset/train/X_train.txt", nrows = max_rows)
-y_train <- read.table(file = "UCI HAR Dataset/train/y_train.txt", nrows = max_rows)
-names(y_train) <- "activity"
-subjects_train <- read.table(file = "UCI HAR Dataset/train/subject_train.txt", nrows = max_rows)
-names(subjects_train) <- "subject"
+X_train <- read.table(file = "UCI HAR Dataset/train/X_train.txt", nrows = max_rows,
+                      col.names = feature_names)
+y_train <- read.table(file = "UCI HAR Dataset/train/y_train.txt", nrows = max_rows,
+                      col.names="activity")
+subjects_train <- read.table(file = "UCI HAR Dataset/train/subject_train.txt", nrows = max_rows,
+                             col.names="subject")
+
 # test sets
-X_test <- read.table(file = "UCI HAR Dataset/test/X_test.txt", nrows = max_rows)
-y_test <- read.table(file = "UCI HAR Dataset/test/y_test.txt", nrows = max_rows)
-names(y_test) <- "activity"
-subjects_test <- read.table(file = "UCI HAR Dataset/test/subject_test.txt", nrows = max_rows)
-names(subjects_test) <- "subject"
+X_test <- read.table(file = "UCI HAR Dataset/test/X_test.txt", nrows = max_rows,
+                     col.names = feature_names)
+y_test <- read.table(file = "UCI HAR Dataset/test/y_test.txt", nrows = max_rows,
+                     col.names="activity")
+subjects_test <- read.table(file = "UCI HAR Dataset/test/subject_test.txt", nrows = max_rows,
+                            col.names="subject")
 
 
 # separately bind train and test dfs
@@ -31,24 +41,11 @@ rm(df_train, df_test)
 
 df <- as_tibble(df)
 
-# steps 2 to 4
-
-# bring data from STEP 1
-df <- readRDS("merged_data.RDS")
-
 # STEP 2: extract only the mean and the std of each measurement
-# add feature names to dataset
-feature_names <- read.table("UCI HAR Dataset/features.txt",
-                            stringsAsFactors = F)
-feature_names <- feature_names$V2  # getting rid of index
-
-
-# change names in df
-names(df)[3:dim(df)[2]] <- feature_names
 
 # remove duplicated features
-df <- df[,!duplicated(names(df))]
-# select only means and stds AND subject, target
+# df <- df[,!duplicated(names(df))]
+# select only means and stds AND subject, activity
 df <- df %>%
   select( "subject" | "activity" | contains(c("std", "mean"))) %>%
   # remove mean frequency
@@ -67,6 +64,8 @@ print(activities[4])
 df$activity <- factor(df$activity, labels = activities)
 
 # STEP 4: rename variables
+# idea: separate variable names into tags with underscores
+
 # create a function that applies all the transformations
 clean_vars <- function(var) {
   # transformation: initial t -> empty
@@ -88,7 +87,7 @@ clean_vars <- function(var) {
   var <- gsub("BodyBody", "Body", var)
   return(var)
 }
-
+# apply the transformation
 names(df) <- sapply(names(df), clean_vars)
 
 # save, to keep in folder
