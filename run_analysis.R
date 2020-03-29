@@ -1,5 +1,5 @@
 library(tibble)
-
+library(dplyr)
 setwd("add your directory")
 
 # import everything
@@ -32,10 +32,6 @@ rm(df_train, df_test)
 df <- as_tibble(df)
 
 # steps 2 to 4
-
-library(dplyr)
-
-setwd("/home/jmontero/Documents/coursera/dataCleaningR/Week4/Assignment_folder/GettingCleaningDataCoursera")
 
 # bring data from STEP 1
 df <- readRDS("merged_data.RDS")
